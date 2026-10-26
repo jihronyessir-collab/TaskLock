@@ -13,6 +13,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="wolfveil", description="Wolfveil early-development WireGuard client")
     commands = parser.add_subparsers(dest="command", required=True)
+    commands.add_parser("gui", help="Open the early alpha Windows interface")
     check = commands.add_parser("check", help="Validate a local WireGuard .conf")
     check.add_argument("config")
     up = commands.add_parser("connect", help="Install a WireGuard tunnel service")
@@ -31,7 +32,10 @@ def main(argv: list[str] | None = None) -> int:
 
     args = parser.parse_args(argv)
     try:
-        if args.command == "check":
+        if args.command == "gui":
+            from .gui import main as gui_main
+            gui_main()
+        elif args.command == "check":
             info = validate_config_file(args.config)
             print(f"Valid configuration: {info.name}; peers: {info.peers}; "
                   f"DNS configured: {'yes' if info.has_dns else 'no'}")

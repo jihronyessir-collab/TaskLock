@@ -1,5 +1,6 @@
 @echo off
 setlocal
+set "TASKLOCK_VERSION=5.1.1"
 cd /d "%~dp0"
 echo ======================================
 echo       TaskLock v5 BLUECORE Builder
@@ -14,7 +15,7 @@ if errorlevel 1 goto fail
 if errorlevel 1 goto fail
 if not exist "dist\TaskLock.exe" goto fail
 if not exist release mkdir release
-powershell -NoProfile -Command "Compress-Archive -Path 'dist\TaskLock.exe','Browser_Extension','README.md','CHANGELOG.md','LICENSE' -DestinationPath 'release\TaskLock-v5.0.0-Windows.zip' -Force"
+powershell -NoProfile -Command "Compress-Archive -Path 'dist\TaskLock.exe','Browser_Extension','README.md','CHANGELOG.md','LICENSE' -DestinationPath 'release\TaskLock-v%TASKLOCK_VERSION%-Windows.zip' -Force"
 if errorlevel 1 goto fail
 set "ISCC=%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe"
 if not exist "%ISCC%" set "ISCC=%ProgramFiles%\Inno Setup 6\ISCC.exe"
@@ -22,10 +23,10 @@ if not exist "%ISCC%" goto portable
 "%ISCC%" "installer\TaskLock.iss"
 if errorlevel 1 goto fail
 echo.
-echo SUCCESS! Installer: release\TaskLock-v5.0.0-Setup.exe
+echo SUCCESS! Installer: release\TaskLock-v%TASKLOCK_VERSION%-Setup.exe
 :portable
 echo SUCCESS! Portable EXE: dist\TaskLock.exe
-echo Windows ZIP: release\TaskLock-v5.0.0-Windows.zip
+echo Windows ZIP: release\TaskLock-v%TASKLOCK_VERSION%-Windows.zip
 echo If installer is missing, install free Inno Setup 6 and run the builder again.
 pause
 exit /b 0

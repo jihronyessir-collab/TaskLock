@@ -1,4 +1,4 @@
-name: TaskLock v5 Windows Installer and Release
+name: TaskLock Windows Installer and Release
 on:
   workflow_dispatch:
     inputs:
@@ -79,7 +79,7 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: TaskLock-v5-Windows
+          name: TaskLock-Windows
           path: release/*
       - name: Publish official release on version tags
         if: ${{ startsWith(github.ref, 'refs/tags/v') || inputs.publish_release == true || (github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[publish-beta]')) }}
@@ -87,7 +87,7 @@ jobs:
         with:
           tag_name: ${{ (github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main') && format('v{0}-beta.1', steps.app_version.outputs.version) || github.ref_name }}
           target_commitish: ${{ github.sha }}
-          name: ${{ (github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main') && format('TaskLock v{0} Update Reliability Beta 1', steps.app_version.outputs.version) || github.ref_name }}
+          name: ${{ (github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main') && format('TaskLock v{0} SKYLINE Beta 1', steps.app_version.outputs.version) || github.ref_name }}
           prerelease: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || contains(github.ref_name, '-') }}
           files: release/*
           body_path: CHANGELOG.md

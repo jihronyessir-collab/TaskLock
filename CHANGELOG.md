@@ -1,5 +1,12 @@
 # TaskLock — Changelog
 
+## v5.1.1 — Update Check Reliability (Windows public beta)
+- Fixed Check for Updates reporting HTTP Error 404 by adding a fallback to the official GitHub Pages release feed.
+- Verified installer filenames, versions, URLs, and sizes before offering downloads.
+- Improved messages when neither update source is available.
+- Kept all V5.1.0 Color & Sound features and local task data unchanged.
+
+
 ## v5.1.0 — Color & Sound Edition (Windows public beta)
 - Added five expressive color palettes: Inferno Red, Phantom Violet, Emerald Pulse, Solar Flare, and Arctic Frost; retained all existing themes.
 - Made the sidebar and updates panel better reflect the selected palette.

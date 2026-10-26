@@ -1,5 +1,13 @@
 # TaskLock — Changelog
 
+## v6.0.0 — SKYLINE (Windows beta development)
+- Revamped navigation sidebar and workspace header into a futuristic mission-control design.
+- Replaced the fixed blue in-app lock emblem with a lock drawn in the current theme's colors, and generated a theme-matched window icon.
+- Fixed overlapping Tasks form controls: homework checkbox and Add/Clear buttons no longer share the Notes input grid rows.
+- Preserved existing themes, reminder tones, task storage, update checking and user settings.
+- Desktop and release testing required before public deployment.
+
+
 ## v5.1.1 — Update Check Reliability (Windows public beta)
 - Fixed Check for Updates reporting HTTP Error 404 by adding a fallback to the official GitHub Pages release feed.
 - Verified installer filenames, versions, URLs, and sizes before offering downloads.

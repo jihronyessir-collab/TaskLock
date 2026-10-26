@@ -1,6 +1,6 @@
 ; TaskLock v5 BLUECORE — user-level Windows setup using Inno Setup 6
 #ifndef MyAppVersion
-  #define MyAppVersion "5.1.1"
+  #define MyAppVersion "6.0.0"
 #endif
 #define MyAppName "TaskLock"
 #define MyAppPublisher "Tavlokyn Studios"
@@ -9,7 +9,7 @@
 AppId={{21F5F18B-E418-4EAC-856C-4403E4F9CB45}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-AppVerName=TaskLock v{#MyAppVersion} BLUECORE
+AppVerName=TaskLock v{#MyAppVersion} SKYLINE
 AppPublisher={#MyAppPublisher}
 DefaultDirName={localappdata}\Programs\TaskLock
 DefaultGroupName=TaskLock

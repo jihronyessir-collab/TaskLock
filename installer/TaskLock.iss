@@ -1,6 +1,6 @@
 ; TaskLock v5 BLUECORE — user-level Windows setup using Inno Setup 6
 #ifndef MyAppVersion
-  #define MyAppVersion "5.1.0"
+  #define MyAppVersion "5.1.1"
 #endif
 #define MyAppName "TaskLock"
 #define MyAppPublisher "Tavlokyn Studios"

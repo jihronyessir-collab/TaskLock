@@ -66,3 +66,9 @@ def test_connection_requires_consent():
 def test_gui_source_compiles():
     gui = Path(__file__).resolve().parents[1] / 'projects' / 'wolfveil' / 'wolfveil' / 'gui.py'
     compile(gui.read_text(encoding='utf-8'), str(gui), 'exec')
+
+
+def test_script_hooks_rejected():
+    config = VALID.replace("DNS = 10.9.0.1", "DNS = 10.9.0.1\\nPostUp = echo unsafe")
+    with pytest.raises(ConfigError, match="script hooks"):
+        validate_config_text(config, "wolfveil_test")

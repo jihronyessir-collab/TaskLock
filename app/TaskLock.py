@@ -32,6 +32,7 @@ from tasklock_core import (VERSION, FMT, DEFAULT_SITES, REPEATS, CATEGORIES, PRI
                            TaskStore, make_task, validate_due, normalize_sites, next_occurrence,
                            complete_task, is_due, is_homework_blocking, active_sites)
 from tasklock_audio import TONES, ensure_tones
+from tasklock_updates import ReleaseLookupError, latest_published_release
 
 BG = '#070D1C'
 PANEL = '#101D36'
@@ -776,6 +777,7 @@ class TaskLockApp:
         btn(actions, 'Check for updates', self.check_updates, primary=True).pack(side='left', padx=(0, 9))
         btn(actions, 'Release downloads', self.open_releases).pack(side='left')
         releases = [
+            ('v5.1.1','Update Check Reliability', 'Fixed HTTP 404 update checks with a verified official download-feed fallback and clearer error messages.'),
             ('v5.1.0','Color & Sound Edition', 'Five new themed color palettes including Inferno Red, eight new instrument-inspired ringtone melodies, and improved theme styling.'),
             ('v5.0.0','BLUECORE', 'New futuristic lock branding, advanced recurrence and subtasks, v4 backups, focus timer, calendar modes, category-based ringtones, themes, accessibility and Windows setup pipeline.'),
             ('v4.0.0', 'Blue & black redesign', 'New sidebar dashboard, colorful task lists, day-by-day calendar, editable tasks, focus dashboard, 5 additional ringtones, in-app update log and release links.'),
@@ -1128,31 +1130,24 @@ class TaskLockApp:
         repo = self.release_repo()
         if not repo:
             return self.open_releases()
+
         def worker():
             try:
-                req = Request(f'https://api.github.com/repos/{repo}/releases?per_page=15',
-                              headers={'User-Agent': f'TaskLock/{VERSION}', 'Accept': 'application/vnd.github+json'})
-                with urlopen(req, timeout=8) as response:
-                    published = json.load(response)
-                available = []
-                for release in published:
-                    if release.get('draft'):
-                        continue
-                    match = re.fullmatch(r'v?(\d+)\.(\d+)\.(\d+)(?:-beta\.\d+)?', release.get('tag_name',''))
-                    if match:
-                        available.append((tuple(map(int, match.groups())), release))
-                if not available:
-                    raise ValueError('No compatible public release found')
-                remote, info = max(available, key=lambda entry: entry[0])
+                remote, info = latest_published_release(repo)
                 latest = '.'.join(map(str, remote))
                 local = tuple(int(v) for v in VERSION.split('.'))
                 if remote > local:
-                    self.root.after(0, lambda: self.offer_update(latest, info))
+                    self.root.after(0, lambda v=latest, release=info: self.offer_update(v, release))
                 else:
-                    self.root.after(0, lambda: messagebox.showinfo('Up to date', 'You have the latest published TaskLock version.', parent=self.root))
-            except (OSError, URLError, ValueError, KeyError, TypeError) as exc:
-                self.root.after(0, lambda err=str(exc): messagebox.showinfo('Update check unavailable',
-                                  'Could not check GitHub Releases.\n' + err, parent=self.root))
+                    self.root.after(0, lambda: messagebox.showinfo(
+                        'Up to date',
+                        f'TaskLock v{VERSION} is up to date. No newer public release is available.',
+                        parent=self.root))
+            except ReleaseLookupError as exc:
+                self.root.after(0, lambda error=str(exc): messagebox.showinfo(
+                    'Update check unavailable',
+                    'Could not verify the latest release right now.\n\n' + error,
+                    parent=self.root))
         threading.Thread(target=worker, daemon=True).start()
 
     def offer_update(self, version, release):
@@ -1194,7 +1189,7 @@ class TaskLockApp:
                         h.update(chunk)
                         out.write(chunk)
                 if expected_size and received != expected_size:
-                    raise ValueError('Downloaded ZIP size did not match the release asset.')
+                    raise ValueError('Downloaded file size did not match the release asset.')
                 if digest.startswith('sha256:') and h.hexdigest() != digest.split(':', 1)[1].lower():
                     raise ValueError('Downloaded ZIP checksum failed verification.')
                 os.replace(tmp, destination)

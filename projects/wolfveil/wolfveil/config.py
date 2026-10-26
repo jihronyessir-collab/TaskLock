@@ -65,6 +65,8 @@ def validate_config_text(text: str, name: str) -> TunnelInfo:
         key, value = (part.strip() for part in line.split("=", 1))
         if not key or not value:
             raise ConfigError("A WireGuard configuration field is empty.")
+        if key.lower() in {"preup", "postup", "predown", "postdown"}:
+            raise ConfigError("Executable script hooks are not supported by Wolfveil.")
         target = interface if section == "interface" else peers[-1]
         if key.lower() in target:
             raise ConfigError("Duplicate WireGuard configuration field.")

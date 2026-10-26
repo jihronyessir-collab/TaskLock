@@ -1,4 +1,4 @@
-"""TaskLock v5 BLUECORE — offline-first Windows task dashboard and homework focus tool.
+"""TaskLock v6 SKYLINE — offline-first Windows task dashboard and homework focus tool.
 
 Python 3.10+, no runtime dependencies beyond standard-library Tk/Tcl.
 """
@@ -132,8 +132,8 @@ class TaskLockApp:
     def __init__(self, root: tk.Tk):
         self.root = root
         self.root.title(f'TaskLock v{VERSION}')
-        self.root.geometry('1200x800')
-        self.root.minsize(1000, 650)
+        self.root.geometry('1320x850')
+        self.root.minsize(1060, 690)
         self.root.configure(bg=BG)
         self.store = TaskStore()
         apply_palette(self.store.settings.get('theme','Bluecore'))
@@ -175,57 +175,74 @@ class TaskLockApp:
         style = ttk.Style()
         style.theme_use('clam')
         style.configure('TCombobox', fieldbackground=PANEL2, background=PANEL2,
-                        foreground='#182439', padding=5)
+                        foreground='#182439', padding=6)
         style.configure('Vertical.TScrollbar', troughcolor=BG, background=PANEL2)
         style.map('TCombobox', fieldbackground=[('readonly', '#DEEAFF')],
                   foreground=[('readonly', '#14243E')])
-        icon_path = bundled('assets/tasklock.png')
-        if icon_path.exists():
-            try:
-                self.icon_image = tk.PhotoImage(file=str(icon_path))
-                self.root.iconphoto(True, self.icon_image)
-            except tk.TclError:
-                pass
+        # A palette-matched lock replaces the fixed blue window icon.
+        image = tk.PhotoImage(width=64, height=64)
+        image.put(BG, to=(0, 0, 64, 64))
+        image.put(CYAN, to=(18, 14, 46, 35))
+        image.put(BG, to=(23, 20, 41, 37))
+        image.put(BLUE_DARK, to=(13, 31, 51, 56))
+        image.put(BLUE, to=(16, 34, 48, 53))
+        image.put(BG, to=(29, 40, 35, 49))
+        self.icon_image = image
+        self.root.iconphoto(True, image)
 
     def build_shell(self):
-        self.sidebar = tk.Frame(self.root, bg=SIDEBAR, width=216)
+        self.sidebar = tk.Frame(self.root, bg=SIDEBAR, width=246,
+                                highlightbackground=LINE, highlightthickness=1)
         self.sidebar.pack(side='left', fill='y')
         self.sidebar.pack_propagate(False)
-        logo = tk.Frame(self.sidebar, bg=SIDEBAR)
-        logo.pack(fill='x', padx=22, pady=(28, 37))
-        if self.icon_image:
-            image = self.icon_image.subsample(24, 24)
-            self.sidebar_image = image
-            tk.Label(logo, image=image, bg=SIDEBAR).pack(side='left', padx=(0, 8))
-        else:
-            label(logo, '◈', 27, color=CYAN, bg=SIDEBAR).pack(side='left', padx=(0, 8))
-        label(logo, 'TaskLock', 19, True, bg=SIDEBAR).pack(side='left')
-        label(self.sidebar, 'B L U E C O R E   /   V 5', 9, True, CYAN, bg=SIDEBAR).pack(anchor='w',padx=25,pady=(0,15))
-        label(self.sidebar, 'WORKSPACE', 9, True, MUTED, bg=SIDEBAR).pack(anchor='w', padx=26, pady=(0, 10))
+        brand = tk.Frame(self.sidebar, bg=SIDEBAR)
+        brand.pack(fill='x', padx=19, pady=(27, 26))
+        mark = tk.Canvas(brand, width=54, height=58, bg=SIDEBAR, highlightthickness=0)
+        mark.create_oval(1, 1, 52, 54, outline=LINE, width=2)
+        mark.create_arc(14, 10, 40, 41, start=0, extent=180, style='arc',
+                        outline=CYAN, width=5)
+        mark.create_rectangle(12, 30, 42, 49, fill=BLUE_DARK, outline=BLUE, width=2)
+        mark.create_oval(24, 35, 30, 41, fill=WHITE, outline='')
+        mark.create_rectangle(26, 40, 28, 45, fill=WHITE, outline='')
+        mark.pack(side='left', padx=(0, 9))
+        brand_text = tk.Frame(brand, bg=SIDEBAR)
+        brand_text.pack(side='left')
+        label(brand_text, 'TaskLock', 19, True, bg=SIDEBAR).pack(anchor='w')
+        label(brand_text, 'S K Y L I N E   /   V 6', 8, True, CYAN, bg=SIDEBAR).pack(anchor='w')
+        tk.Frame(self.sidebar, bg=LINE, height=1).pack(fill='x', padx=20, pady=(0, 19))
+        label(self.sidebar, 'COMMAND DECK / NAVIGATION', 8, True, MUTED, bg=SIDEBAR).pack(anchor='w', padx=22, pady=(0, 12))
         for icon, page in [('◈', 'Dashboard'), ('✓', 'Tasks'), ('▦', 'Calendar'),
                            ('◉', 'Focus'), ('♫', 'Sounds'), ('↻', 'Updates'), ('⚙', 'Settings')]:
-            b = tk.Button(self.sidebar, text=f'  {icon}   {page}', anchor='w', relief='flat', bd=0,
-                          font=(FONT, 11, 'bold'), bg=SIDEBAR, fg=MUTED,
-                          activebackground=PANEL2, activeforeground=WHITE,
-                          padx=20, pady=13, cursor='hand2', highlightthickness=0,
-                          command=lambda p=page: self.show_page(p))
-            b.pack(fill='x', padx=9, pady=2)
-            self.nav_buttons[page] = b
+            button = tk.Button(self.sidebar, text=f'  {icon}    {page.upper()}', anchor='w',
+                               relief='flat', bd=0, font=(FONT, 10, 'bold'), bg=SIDEBAR, fg=MUTED,
+                               activebackground=PANEL2, activeforeground=WHITE,
+                               padx=17, pady=15, cursor='hand2', highlightthickness=0,
+                               command=lambda p=page: self.show_page(p))
+            button.pack(fill='x', padx=10, pady=4)
+            self.nav_buttons[page] = button
         tk.Frame(self.sidebar, bg=SIDEBAR).pack(fill='both', expand=True)
-        label(self.sidebar, 'BY TAVLOKYN STUDIOS', 9, True, CYAN, bg=SIDEBAR).pack(padx=14,pady=(0,6))
-        label(self.sidebar, 'FOCUS BETTER. FINISH MORE.', 8, True, MUTED, bg=SIDEBAR).pack(padx=14, pady=(0, 6))
-        label(self.sidebar, 'v' + VERSION + '  •  Always free', 9, color=CYAN, bg=SIDEBAR).pack(pady=(0, 22))
+        footer = tk.Frame(self.sidebar, bg=PANEL, padx=15, pady=14,
+                          highlightbackground=LINE, highlightthickness=1)
+        footer.pack(fill='x', padx=15, pady=(0, 21))
+        label(footer, '●  SYSTEM ONLINE', 9, True, CYAN, bg=PANEL).pack(anchor='w')
+        label(footer, 'TAVLOKYN STUDIOS', 9, True, MUTED, bg=PANEL).pack(anchor='w', pady=(9, 2))
+        label(footer, f'v{VERSION}  /  FREE', 9, True, WHITE, bg=PANEL).pack(anchor='w')
         self.workspace = tk.Frame(self.root, bg=BG)
         self.workspace.pack(side='left', fill='both', expand=True)
+        status = tk.Frame(self.workspace, bg=BG)
+        status.pack(fill='x', padx=32, pady=(23, 10))
+        label(status, 'SKYLINE   /   FUTURE READY', 9, True, CYAN).pack(side='left')
+        label(status, '◉  LOCAL-FIRST WORKSPACE', 9, True, MUTED).pack(side='right')
         head = tk.Frame(self.workspace, bg=BG)
-        head.pack(fill='x', padx=30, pady=(26, 18))
-        self.page_title = label(head, '', 25, True)
+        head.pack(fill='x', padx=32, pady=(8, 6))
+        self.page_title = label(head, '', 26, True)
         self.page_title.pack(side='left')
-        btn(head, '+ New Task', lambda: self.show_page('Tasks', new=True), primary=True).pack(side='right')
+        btn(head, '+ CREATE TASK', lambda: self.show_page('Tasks', new=True), primary=True).pack(side='right')
         self.page_sub = label(self.workspace, '', 11, color=MUTED)
-        self.page_sub.pack(anchor='w', padx=32, pady=(0, 15))
+        self.page_sub.pack(anchor='w', padx=34, pady=(0, 15))
+        tk.Frame(self.workspace, bg=LINE, height=1).pack(fill='x', padx=32, pady=(0, 12))
         self.content = tk.Frame(self.workspace, bg=BG)
-        self.content.pack(fill='both', expand=True, padx=30, pady=(0, 20))
+        self.content.pack(fill='both', expand=True, padx=32, pady=(0, 20))
 
     def show_page(self, page, **kwargs):
         self.page = page
@@ -233,7 +250,7 @@ class TaskLockApp:
             b.configure(bg=BLUE_DARK if name == page else SIDEBAR,
                         fg=WHITE if name == page else MUTED)
         descriptions = {
-            'Dashboard': 'Your command center for focus, tasks and progress.',
+            'Dashboard': 'SKYLINE / Your futuristic mission-control overview.',
             'Tasks': 'Add, edit, finish and organize your reminders.',
             'Calendar': 'Your schedule, at a glance.',
             'Focus': 'Homework mode keeps distracting sites out of the way.',
@@ -241,7 +258,7 @@ class TaskLockApp:
             'Updates': 'See what changed and check for new releases.',
             'Settings': 'Themes, accessibility, backups and app safety.',
         }
-        self.page_title.configure(text=page if page != 'Dashboard' else 'Your BLUECORE Dashboard')
+        self.page_title.configure(text=page if page != 'Dashboard' else 'SKYLINE Command Center')
         self.page_sub.configure(text=descriptions[page])
         for child in self.content.winfo_children():
             child.destroy()
@@ -274,12 +291,12 @@ class TaskLockApp:
         self._metric(stats, 'To do', len(open_tasks), 'Tasks still on your list')
         self._metric(stats, 'Due today', len([t for t in open_tasks if t['due'][:10] == today]), 'Make progress today', CYAN)
         self._metric(stats, 'Completed', len(done), 'Every finished task counts', GREEN)
-        hero = card(body, bg='#122B58', padx=26, pady=22)
+        hero = card(body, bg=PANEL2, padx=26, pady=22)
         hero.pack(fill='x', pady=(0, 22))
-        label(hero, '◈  BLUECORE / TASK CONTROL', 10, True, CYAN, '#122B58').pack(anchor='w')
-        label(hero, 'Own your day. Lock in your focus.', 20, True, bg='#122B58').pack(anchor='w', pady=(9, 5))
-        label(hero, 'Start a homework task to block the sites you choose, while keeping school sites available.',
-              10, color='#C7DAFB', bg='#122B58', wraplength=720, justify='left').pack(anchor='w', pady=(0, 14))
+        label(hero, '◈  SKYLINE / MISSION CONTROL', 10, True, CYAN, PANEL2).pack(anchor='w')
+        label(hero, 'Your future starts with focus.', 22, True, bg=PANEL2).pack(anchor='w', pady=(9, 5))
+        label(hero, 'Plan your next mission, control distractions, and make steady progress.',
+              10, color=WHITE, bg=PANEL2, wraplength=720, justify='left').pack(anchor='w', pady=(0, 14))
         btn(hero, '◉  Open Focus Mode  →', lambda: self.show_page('Focus'), primary=True).pack(anchor='w')
         total_today = len([t for t in self.tasks if t['due'][:10] == today]); finished_today = len([t for t in self.tasks if t['due'][:10] == today and t.get('state') == 'done'])
         p = card(body, padx=20, pady=15); p.pack(fill='x',pady=(0,18))
@@ -336,7 +353,7 @@ class TaskLockApp:
         if not new:
             tip = card(body, bg='#122B58', padx=19, pady=17)
             tip.pack(fill='x', pady=(0, 17))
-            label(tip, 'Make a plan. Then check it off.', 17, True, bg='#122B58').pack(anchor='w')
+            label(tip, 'Task Operations / SKYLINE', 17, True, bg='#122B58').pack(anchor='w')
             label(tip, 'Filter your tasks below, or use + New Task to add an assignment, chore or reminder.',
                   10, color='#C7DAFB', bg='#122B58').pack(anchor='w', pady=(7, 0))
         else:
@@ -361,7 +378,7 @@ class TaskLockApp:
             self.field(self.form_frame, 'Repeat', combo(self.form_frame, self.form_repeat, REPEATS), 4, 0)
             tk.Checkbutton(self.form_frame, text='Online homework — block selected sites when due',
                            variable=self.form_homework, bg=PANEL, fg=WHITE, selectcolor=PANEL2,
-                           activebackground=PANEL, activeforeground=WHITE, font=(FONT, 10)).grid(row=15, column=0, columnspan=2, sticky='w', pady=8)
+                           activebackground=PANEL, activeforeground=WHITE, font=(FONT, 10)).grid(row=17, column=0, columnspan=2, sticky='w', pady=(12, 8))
             self.field(self.form_frame, 'Distracting sites (separate with commas)',
                        entry(self.form_frame, self.form_sites, 46), 5, 0, span=2)
             self.field(self.form_frame, 'Assignment link (optional)',
@@ -371,7 +388,7 @@ class TaskLockApp:
             self.note_widget = multiline(self.form_frame, 54, 2)
             self.field(self.form_frame, 'Notes (optional)', self.note_widget, 8, 0, span=2)
             actions = tk.Frame(self.form_frame, bg=PANEL)
-            actions.grid(row=16, column=0, columnspan=4, sticky='w', pady=(14, 2))
+            actions.grid(row=18, column=0, columnspan=4, sticky='w', pady=(12, 8))
             self.save_btn = btn(actions, 'Add task', self.save_form, primary=True)
             self.save_btn.pack(side='left', padx=(0, 8))
             btn(actions, 'Clear form', self.clear_form).pack(side='left')
@@ -777,6 +794,7 @@ class TaskLockApp:
         btn(actions, 'Check for updates', self.check_updates, primary=True).pack(side='left', padx=(0, 9))
         btn(actions, 'Release downloads', self.open_releases).pack(side='left')
         releases = [
+            ('v6.0.0','SKYLINE', 'Revamped command center and sidebar, theme-matched lock logo, and fixed task form overlap.'),
             ('v5.1.1','Update Check Reliability', 'Fixed HTTP 404 update checks with a verified official download-feed fallback and clearer error messages.'),
             ('v5.1.0','Color & Sound Edition', 'Five new themed color palettes including Inferno Red, eight new instrument-inspired ringtone melodies, and improved theme styling.'),
             ('v5.0.0','BLUECORE', 'New futuristic lock branding, advanced recurrence and subtasks, v4 backups, focus timer, calendar modes, category-based ringtones, themes, accessibility and Windows setup pipeline.'),

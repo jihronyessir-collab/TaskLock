@@ -33,13 +33,13 @@ Never run an untrusted tunnel configuration.
 
 Run from this folder:
 
-\`\`\`powershell
+```powershell
 python -m wolfveil check "C:\path\mytunnel.conf"
 python -m wolfveil status mytunnel
 python -m wolfveil connect "C:\path\mytunnel.conf" --confirm
 python -m wolfveil disconnect mytunnel --confirm
 python -m wolfveil adblock-check ads.example --blocklist sample-blocklist.txt
-\`\`\`
+```
 
 Connect/disconnect are opt-in and make system changes via the official WireGuard
 client. You can also use WireGuard's own UI instead.

@@ -1,6 +1,6 @@
 # TaskLock — Changelog
 
-## v5.1.0 — Color & Sound Edition (Windows beta)
+## v5.1.0 — Color & Sound Edition (Windows public beta)
 - Added five expressive color palettes: Inferno Red, Phantom Violet, Emerald Pulse, Solar Flare, and Arctic Frost; retained all existing themes.
 - Made the sidebar and updates panel better reflect the selected palette.
 - Added eight original synthesized, instrument-inspired alert melodies: Brass Fanfare, Trombone Groove, Drumline Call, Synthwave Lift, String Serenade, Piano Cascade, Marimba Steps, and Electric Guitar Hook.

@@ -1,0 +1,4 @@
+# Demonstration domains only. No active DNS interception.
+0.0.0.0 ads.example
+127.0.0.1 tracking.example
+||analytics.example^

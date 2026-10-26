@@ -61,3 +61,8 @@ def test_connection_requires_consent():
         connect("not-real.conf")
     with pytest.raises(PermissionError):
         disconnect("wolfveil_test")
+
+
+def test_gui_source_compiles():
+    gui = Path(__file__).resolve().parents[1] / 'projects' / 'wolfveil' / 'wolfveil' / 'gui.py'
+    compile(gui.read_text(encoding='utf-8'), str(gui), 'exec')

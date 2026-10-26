@@ -4,7 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080F20">
-  <meta name="description" content="TaskLock — free Windows homework reminders, full-screen alerts, focus mode, and custom ringtones.">
+  <meta name="description" content="Meet TaskLock v5 BLUECORE by Tavlokyn Studios: a free Windows productivity app with task planning, reminders, calendar views, and optional focus tools. Private testing is underway.">
+  <meta property="og:title" content="TaskLock v5 BLUECORE | Tavlokyn Studios">
+  <meta property="og:description" content="Stay Focused. Finish Strong. TaskLock v5 BLUECORE is built for Windows, with a successful first installer build and private testing underway.">
+  <meta property="og:type" content="website">
   <title>TaskLock v5 BLUECORE — Stay Focused. Finish Strong.</title>
   <link rel="icon" type="image/png" href="assets/tasklock.png">
   <style>
@@ -33,6 +36,19 @@
     .log{display:grid;gap:12px}.logrow{padding:20px 24px;border:1px solid var(--line);background:var(--panel);border-radius:12px;display:grid;grid-template-columns:116px 1fr;gap:20px}.logrow strong{color:var(--cyan)}.logrow p{color:var(--muted);font-size:14px;margin:5px 0 0}
     .small{font-size:13px;color:var(--muted)}footer{border-top:1px solid var(--line);padding:25px 0;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
     code{color:#a5d4ff}#download-status{max-width:340px;font-size:13px;color:#c4d4eb}#download-link[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
+    .status-strip{display:flex;gap:10px;align-items:center;flex-wrap:wrap;color:#d9eaff;font-size:13px;padding:11px 16px;border:1px solid #315b94;background:rgba(28,67,117,.38);border-radius:12px;width:fit-content;margin:0 0 22px}
+    .status-dot{height:9px;width:9px;flex:0 0 9px;border-radius:50%;background:#66b6ff;box-shadow:0 0 0 4px rgba(80,160,255,.13)}
+    .kicker{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--cyan)}
+    .split{display:grid;grid-template-columns:1.15fr 1fr;gap:30px;align-items:start}
+    .glass{background:linear-gradient(140deg,#142b4c,#101b31);border:1px solid #2e4f7b;border-radius:18px;padding:26px}
+    .glass h3{margin:0 0 9px;font-size:22px}.glass p{color:var(--muted);margin:0 0 14px}
+    .milestones{display:grid;gap:13px}.milestone{display:flex;gap:14px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:13px}.milestone:last-child{border-bottom:0;padding-bottom:0}
+    .number{color:var(--cyan);font-size:13px;font-weight:900;letter-spacing:1px;min-width:34px}
+    .milestone p{font-size:14px;margin:3px 0 0}
+    details{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:17px 21px;margin-bottom:10px}
+    summary{cursor:pointer;font-weight:700}details p{color:var(--muted);margin:10px 0 0;font-size:14px}
+    .studio-link{color:var(--cyan);text-decoration:underline;text-underline-offset:3px}
+    @media(max-width:860px){.split{grid-template-columns:1fr}}
     @media(max-width:860px){.hero{grid-template-columns:1fr;padding:40px 0 45px;min-height:unset}.hero h1{font-size:50px}.preview{max-width:660px}.cards{grid-template-columns:repeat(2,1fr)}.navlinks{gap:14px}}
     @media(max-width:560px){.container{width:min(100% - 30px,1160px)}.navlinks a:not(.button){display:none}.logo{font-size:18px}.hero h1{font-size:41px}.cards,.steps{grid-template-columns:1fr}.logrow{grid-template-columns:1fr;gap:4px}.download{padding:22px}h2{font-size:29px}}
     @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
@@ -43,16 +59,17 @@
   <div class="container">
     <nav aria-label="Main navigation">
       <a href="#top" class="logo"><img src="assets/tasklock.png" alt="TaskLock blue lock emblem">TaskLock</a>
-      <div class="navlinks"><a href="#features">Features</a><a href="#updates">What's new</a><a href="#install" class="button primary">Get TaskLock</a></div>
+      <div class="navlinks"><a href="#features">Features</a><a href="#journey">Our progress</a><a href="#updates">What's new</a><a href="https://obedient-focus-lock-flow.base44.app/" target="_blank" rel="noopener noreferrer">Tavlokyn Studios</a><a href="#install" class="button primary">Windows build</a></div>
     </nav>
     <main id="top">
       <div class="hero">
         <div>
-          <div class="eyebrow">Focus better · Finish more</div>
+          <div class="status-strip"><span class="status-dot" aria-hidden="true"></span> V5 BLUECORE · First Windows build successful · Private testing</div>
+          <div class="eyebrow">Tavlokyn Studios presents · TaskLock v5</div>
           <h1>Your tasks.<br>Your time.<br><span>Your focus.</span></h1>
-          <p class="lead">A futuristic, free Windows task manager by Tavlokyn Studios. See your assignments, stay on track, and spend less time on distracting websites.</p>
-          <div class="actionrow"><a class="button primary" href="#install">Get TaskLock for Windows ↓</a><a class="button" href="#features">Explore features →</a></div>
-          <p class="fine">Free to use · Windows 11 · No account needed · Local task storage</p>
+          <p class="lead">Plan your day. Protect your focus. Finish what matters. BLUECORE brings tasks, a calendar, reminders, and optional focus tools together in a sleek Windows app.</p>
+          <div class="actionrow"><a class="button primary" href="#install">Windows build status ↓</a><a class="button" href="#features">Explore BLUECORE →</a></div>
+          <p class="fine">Free to use · Designed for Windows 11 · No account needed · Tasks stored locally · Public release not yet available</p>
         </div>
         <div class="preview"><span class="pill">BLUECORE / V5.0</span><img src="assets/tasklock-preview.png" alt="TaskLock v5 dashboard displaying blue task summary cards, focus mode, and a task list"></div>
       </div>
@@ -69,14 +86,35 @@
           <div class="feature"><div class="ic">↻</div><h3>What's New</h3><p>Read the release history in the app and check for new published versions.</p></div>
         </div>
       </section>
+      <section id="journey">
+        <div class="eyebrow">Built, not just imagined</div>
+        <h2>BLUECORE has reached its first major milestone.</h2>
+        <p class="sub">From a simple reminder idea to a real Windows installer build. Here's where TaskLock stands today, and what comes next.</p>
+        <div class="split">
+          <div class="glass">
+            <div class="kicker">TaskLock v5 · Build milestone</div>
+            <h3>Windows installer: built successfully.</h3>
+            <p>The first automated Windows build passed. The app is now in private testing, where we can check installation, reminders, backups, and the focus extension before a public launch.</p>
+            <a href="#install" class="button primary">See release status ↓</a>
+          </div>
+          <div class="glass">
+            <div class="milestones">
+              <div class="milestone"><span class="number">01 ✓</span><div><b>BLUECORE source completed</b><p>New visual identity, dashboard, task and focus features.</p></div></div>
+              <div class="milestone"><span class="number">02 ✓</span><div><b>First Windows build passed</b><p>Automated build produced installer files for testing.</p></div></div>
+              <div class="milestone"><span class="number">03 →</span><div><b>Private testing</b><p>Check real Windows behavior before making downloads public.</p></div></div>
+              <div class="milestone"><span class="number">04 …</span><div><b>Public release</b><p>Download button activates after an official GitHub Release is published.</p></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
       <section id="install">
         <div class="download">
-          <div><span class="tag">WINDOWS 11 · FREE DESKTOP INSTALLER</span><h2>Download TaskLock v5</h2><p>When the Windows release is published, download the installer and follow its on-screen steps. No Python setup is required.</p><div id="download-status" role="status" aria-live="polite">Checking whether a Windows release is available…</div></div>
-          <div><a id="download-link" href="#publishing" aria-disabled="true" class="button primary">Download for Windows ↓</a><p class="small">No Python needed to run the released EXE.</p></div>
+          <div><span class="tag">WINDOWS 11 · PRIVATE TESTING</span><h2>TaskLock v5 Windows release</h2><p>Our first installer build is complete. Public downloads will open after Windows testing and an official release. The installer is intended to run without requiring Python.</p><div id="download-status" role="status" aria-live="polite">Checking whether a Windows release is available…</div></div>
+          <div><a id="download-link" aria-disabled="true" class="button primary">Checking release…</a><p class="small">Public release link appears here when available.</p></div>
         </div>
         <div class="steps" style="margin-top:29px">
-          <div class="step"><strong>STEP 01</strong><h3>Download & extract</h3><p>Get the official TaskLock Windows installer when a release is available.</p></div>
-          <div class="step"><strong>STEP 02</strong><h3>Launch TaskLock</h3><p>Launch TaskLock from Start. New unsigned applications may trigger Windows protection; do not disable system security.</p></div>
+          <div class="step"><strong>STEP 01</strong><h3>Get the installer</h3><p>Once published, download the official Windows installer from this page.</p></div>
+          <div class="step"><strong>STEP 02</strong><h3>Install and launch</h3><p>Scan the file with Windows Security, install, then launch TaskLock from Start. Do not disable system protections.</p></div>
           <div class="step"><strong>STEP 03</strong><h3>Optional website blocking</h3><p>In Chrome or Edge extensions, use <strong>Load unpacked</strong> to load the included <code>Browser_Extension</code> folder.</p></div>
         </div>
       </section>
@@ -91,9 +129,21 @@
           <div class="logrow"><strong>v1.0.0</strong><div><b>First release</b><p>Saved tasks, calendar, recurring reminders, full-screen alerts, Done, Snooze, and Emergency Exit.</p></div></div>
         </div>
       </section>
-      <section id="publishing"><h2>For release publishers</h2><p class="sub">This is a real static website you can put on GitHub Pages for free. The Download button becomes active when a corresponding TaskLock Windows release appears on GitHub. Publishing requires a GitHub repository and running the included Windows build workflow.</p></section>
+      <section id="future">
+        <div class="eyebrow">Looking ahead</div>
+        <h2>TaskLock V6 is on the drawing board.</h2>
+        <p class="sub">We're collecting ideas for the next chapter. No V6 features or release date are confirmed yet—our priority is making BLUECORE dependable.</p>
+        <div class="glass"><h3>Built with focus in mind. Designed to keep evolving.</h3><p>Follow Tavlokyn Studios for the broader story behind TaskLock and future software projects.</p><a class="button" href="https://obedient-focus-lock-flow.base44.app/" target="_blank" rel="noopener noreferrer">Visit Tavlokyn Studios ↗</a></div>
+      </section>
+      <section id="faq">
+        <div class="eyebrow">Good to know</div><h2>Frequently asked questions</h2>
+        <details><summary>Is TaskLock free?</summary><p>Yes. TaskLock v5 is designed to be free to use. The public Windows installer has not been released yet.</p></details>
+        <details><summary>Does TaskLock need an account or cloud storage?</summary><p>No account is required. Task information is stored locally on your computer; there is no cloud sync in v5.</p></details>
+        <details><summary>Does Focus Mode block every website automatically?</summary><p>No. Website blocking is optional and works with a companion extension for Chrome or Edge. You choose sites to block and can pause the feature.</p></details>
+        <details><summary>Can I download the Windows installer now?</summary><p>The first build succeeded for private testing. The download button will activate after an official public GitHub Release with a Windows installer is available.</p></details>
+      </section>
     </main>
-    <footer><span>© 2026 Tavlokyn Studios · TaskLock BLUECORE</span><span>Built for focus, with an exit when you need one.</span></footer>
+    <footer><span>© 2026 <a class="studio-link" href="https://obedient-focus-lock-flow.base44.app/" target="_blank" rel="noopener noreferrer">Tavlokyn Studios</a> · TaskLock BLUECORE</span><span>Stay Focused. Finish Strong. · Private testing underway</span></footer>
   </div>
   <script src="assets/site.js" defer></script>
 </body>

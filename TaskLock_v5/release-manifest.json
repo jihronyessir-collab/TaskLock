@@ -1,0 +1,9 @@
+{
+  "product": "TaskLock",
+  "publisher": "Tavlokyn Studios",
+  "version": "5.0.0",
+  "published": false,
+  "repository": null,
+  "files": [],
+  "note": "The public manifest is produced only after a real Windows build."
+}

@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       publish_release:
-        description: 'Publish a public v5.1.0 beta installer after Windows testing'
+        description: 'Publish a public beta installer for the current app version after Windows tests'
         type: boolean
         required: true
         default: false
@@ -16,6 +16,7 @@ on:
       - 'installer/**'
       - 'tests/test_tasklock_core.py'
       - 'tests/test_v5.py'
+      - 'tests/test_tasklock_updates.py'
       - 'tools/**'
       - 'Browser_Extension/**'
       - '.github/workflows/windows-release.yml'
@@ -23,6 +24,7 @@ on:
       - 'README.md'
 permissions:
   contents: write
+  actions: write
 jobs:
   build-windows:
     runs-on: windows-2022
@@ -31,6 +33,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
+      - name: Read current application version
+        id: app_version
+        shell: pwsh
+        run: |
+          $version = python -c "import sys; sys.path.insert(0, 'app'); from tasklock_core import VERSION; print(VERSION)"
+          "version=$version" >> $env:GITHUB_OUTPUT
       - name: Install build and test requirements
         run: python -m pip install --upgrade pip pyinstaller pytest
       - name: Run unit tests on Windows
@@ -55,7 +63,7 @@ jobs:
         run: |
           New-Item -ItemType Directory release -Force | Out-Null
           & 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' "installer\TaskLock.iss"
-          if (!(Test-Path release/TaskLock-v5.1.0-Setup.exe)) { throw 'Installer missing' }
+          if (!(Test-Path "release/TaskLock-v${{ steps.app_version.outputs.version }}-Setup.exe")) { throw 'Installer missing' }
       - name: Package portable app and extension
         shell: pwsh
         run: |
@@ -63,10 +71,10 @@ jobs:
           Copy-Item dist/TaskLock.exe portable/TaskLock.exe
           Copy-Item Browser_Extension portable/Browser_Extension -Recurse
           Copy-Item README.md, CHANGELOG.md, LICENSE portable/
-          Compress-Archive -Path portable/* -DestinationPath release/TaskLock-v5.1.0-Windows.zip -Force
+          Compress-Archive -Path portable/* -DestinationPath release/TaskLock-v${{ steps.app_version.outputs.version }}-Windows.zip -Force
       - name: Compute release manifest and checksums
         env:
-          TASKLOCK_RELEASE_TAG: ${{ (github.event_name == 'workflow_dispatch' || (github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[publish-v5.1.0]'))) && 'v5.1.0-beta.1' || github.ref_name }}
+          TASKLOCK_RELEASE_TAG: ${{ (github.event_name == 'workflow_dispatch' || (github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[publish-beta]'))) && format('v{0}-beta.1', steps.app_version.outputs.version) || github.ref_name }}
         run: python tools/make_release_manifest.py --repo "${{ github.repository }}" --folder release
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -74,13 +82,19 @@ jobs:
           name: TaskLock-v5-Windows
           path: release/*
       - name: Publish official release on version tags
-        if: ${{ startsWith(github.ref, 'refs/tags/v') || inputs.publish_release == true || (github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[publish-v5.1.0]')) }}
+        if: ${{ startsWith(github.ref, 'refs/tags/v') || inputs.publish_release == true || (github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[publish-beta]')) }}
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ (github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main') && 'v5.1.0-beta.1' || github.ref_name }}
+          tag_name: ${{ (github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main') && format('v{0}-beta.1', steps.app_version.outputs.version) || github.ref_name }}
           target_commitish: ${{ github.sha }}
-          name: ${{ (github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main') && 'TaskLock v5.1.0 Color & Sound Beta 1' || github.ref_name }}
+          name: ${{ (github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main') && format('TaskLock v{0} Update Reliability Beta 1', steps.app_version.outputs.version) || github.ref_name }}
           prerelease: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || contains(github.ref_name, '-') }}
           files: release/*
           body_path: CHANGELOG.md
           generate_release_notes: true
+      - name: Refresh public release website
+        if: ${{ startsWith(github.ref, 'refs/tags/v') || inputs.publish_release == true || (github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[publish-beta]')) }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: gh workflow run website.yml --ref main

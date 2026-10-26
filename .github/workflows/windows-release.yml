@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       publish_release:
-        description: 'Publish a public v5.0.0 beta installer after Windows testing'
+        description: 'Publish a public v5.1.0 beta installer after Windows testing'
         type: boolean
         required: true
         default: false
@@ -43,7 +43,7 @@ jobs:
         run: |
           New-Item -ItemType Directory release -Force | Out-Null
           & 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' "installer\TaskLock.iss"
-          if (!(Test-Path release/TaskLock-v5.0.0-Setup.exe)) { throw 'Installer missing' }
+          if (!(Test-Path release/TaskLock-v5.1.0-Setup.exe)) { throw 'Installer missing' }
       - name: Package portable app and extension
         shell: pwsh
         run: |
@@ -51,8 +51,10 @@ jobs:
           Copy-Item dist/TaskLock.exe portable/TaskLock.exe
           Copy-Item Browser_Extension portable/Browser_Extension -Recurse
           Copy-Item README.md, CHANGELOG.md, LICENSE portable/
-          Compress-Archive -Path portable/* -DestinationPath release/TaskLock-v5.0.0-Windows.zip -Force
+          Compress-Archive -Path portable/* -DestinationPath release/TaskLock-v5.1.0-Windows.zip -Force
       - name: Compute release manifest and checksums
+        env:
+          TASKLOCK_RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && 'v5.1.0-beta.1' || github.ref_name }}
         run: python tools/make_release_manifest.py --repo "${{ github.repository }}" --folder release
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -63,9 +65,9 @@ jobs:
         if: ${{ startsWith(github.ref, 'refs/tags/v') || inputs.publish_release == true }}
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.event_name == 'workflow_dispatch' && 'v5.0.0-beta.1' || github.ref_name }}
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && 'v5.1.0-beta.1' || github.ref_name }}
           target_commitish: ${{ github.sha }}
-          name: ${{ github.event_name == 'workflow_dispatch' && 'TaskLock v5.0.0 BLUECORE Beta 1' || github.ref_name }}
+          name: ${{ github.event_name == 'workflow_dispatch' && 'TaskLock v5.1.0 Color & Sound Beta 1' || github.ref_name }}
           prerelease: ${{ github.event_name == 'workflow_dispatch' || contains(github.ref_name, '-') }}
           files: release/*
           body_path: CHANGELOG.md

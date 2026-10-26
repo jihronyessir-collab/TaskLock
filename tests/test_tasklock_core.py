@@ -4,7 +4,7 @@ from datetime import datetime
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'app'))
 from tasklock_core import (TaskStore, make_task, complete_task, normalize_sites,
                            validate_due, active_sites, is_due, normalized_task, is_homework_blocking)
-from tasklock_audio import SCORES, ensure_tones
+from tasklock_audio import SCORES, TONES, INSTRUMENTS, ensure_tones
 
 
 def test_migrate_v3(tmp_path):
@@ -47,7 +47,10 @@ def test_sites_validate():
 
 def test_audio(tmp_path):
     ensure_tones(tmp_path)
-    assert len(list(tmp_path.glob('*.wav'))) == 12
+    assert len(list(tmp_path.glob('*.wav'))) == 20
+    assert set(INSTRUMENTS) == set(SCORES)
+    assert 'Brass Fanfare' in TONES and 'Drumline Call' in TONES
+    assert (tmp_path/'Electric_Guitar_Hook.wav').exists()
     import wave
     with wave.open(str(tmp_path/'Neon_Flight.wav')) as f:
         assert f.getnchannels() == 1 and f.getnframes() > 1000

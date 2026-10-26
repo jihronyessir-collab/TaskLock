@@ -52,11 +52,19 @@ PALETTES = {
  'Cyber Violet': ('#0D0B1C','#1A1737','#2B2252','#45336A','#9974FF','#6541BA','#C2A6FF'),
  'Midnight': ('#090E17','#151D2C','#202C3E','#33435A','#668DC8','#365C91','#A2BBE4'),
  'Frost': ('#0A1620','#132B3C','#1B3C50','#33576A','#38ACDE','#23739B','#9BEAFF'),
+ 'Inferno Red': ('#1B090D','#321018','#471D26','#773039','#F34D55','#B92D3E','#FFB087'),
+ 'Phantom Violet': ('#10091D','#201033','#321C4A','#583479','#AC72FF','#7445C7','#D5B4FF'),
+ 'Emerald Pulse': ('#071B17','#102F28','#1A4338','#2C6B55','#34D6A1','#16865F','#A2F8D1'),
+ 'Solar Flare': ('#211408','#372412','#4B331C','#77532A','#F6B74C','#C17A25','#FFE2A0'),
+ 'Arctic Frost': ('#071820','#122B39','#1B3E4D','#336574','#57D5F2','#2C92BA','#B9F2FF'),
 }
 
+SIDEBAR = '#0C172A'
+
 def apply_palette(name):
-    global BG,PANEL,PANEL2,LINE,BLUE,BLUE_DARK,CYAN
+    global BG,PANEL,PANEL2,LINE,BLUE,BLUE_DARK,CYAN,SIDEBAR
     BG,PANEL,PANEL2,LINE,BLUE,BLUE_DARK,CYAN = PALETTES.get(name,PALETTES['Bluecore'])
+    SIDEBAR = '#0C172A' if name == 'Bluecore' else PANEL
 
 
 def bundled(relative: str) -> Path:
@@ -128,6 +136,7 @@ class TaskLockApp:
         self.root.configure(bg=BG)
         self.store = TaskStore()
         apply_palette(self.store.settings.get('theme','Bluecore'))
+        self.root.configure(bg=BG)
         global _TEXT_SCALE
         _TEXT_SCALE = {'Compact': .9, 'Normal': 1., 'Large': 1.2}.get(self.store.settings.get('text_scale','Normal'),1.)
         self.tasks = self.store.tasks
@@ -178,33 +187,33 @@ class TaskLockApp:
                 pass
 
     def build_shell(self):
-        self.sidebar = tk.Frame(self.root, bg='#0C172A', width=216)
+        self.sidebar = tk.Frame(self.root, bg=SIDEBAR, width=216)
         self.sidebar.pack(side='left', fill='y')
         self.sidebar.pack_propagate(False)
-        logo = tk.Frame(self.sidebar, bg='#0C172A')
+        logo = tk.Frame(self.sidebar, bg=SIDEBAR)
         logo.pack(fill='x', padx=22, pady=(28, 37))
         if self.icon_image:
             image = self.icon_image.subsample(24, 24)
             self.sidebar_image = image
-            tk.Label(logo, image=image, bg='#0C172A').pack(side='left', padx=(0, 8))
+            tk.Label(logo, image=image, bg=SIDEBAR).pack(side='left', padx=(0, 8))
         else:
-            label(logo, '◈', 27, color=CYAN, bg='#0C172A').pack(side='left', padx=(0, 8))
-        label(logo, 'TaskLock', 19, True, bg='#0C172A').pack(side='left')
-        label(self.sidebar, 'B L U E C O R E   /   V 5', 9, True, CYAN, bg='#0C172A').pack(anchor='w',padx=25,pady=(0,15))
-        label(self.sidebar, 'WORKSPACE', 9, True, MUTED, bg='#0C172A').pack(anchor='w', padx=26, pady=(0, 10))
+            label(logo, '◈', 27, color=CYAN, bg=SIDEBAR).pack(side='left', padx=(0, 8))
+        label(logo, 'TaskLock', 19, True, bg=SIDEBAR).pack(side='left')
+        label(self.sidebar, 'B L U E C O R E   /   V 5', 9, True, CYAN, bg=SIDEBAR).pack(anchor='w',padx=25,pady=(0,15))
+        label(self.sidebar, 'WORKSPACE', 9, True, MUTED, bg=SIDEBAR).pack(anchor='w', padx=26, pady=(0, 10))
         for icon, page in [('◈', 'Dashboard'), ('✓', 'Tasks'), ('▦', 'Calendar'),
                            ('◉', 'Focus'), ('♫', 'Sounds'), ('↻', 'Updates'), ('⚙', 'Settings')]:
             b = tk.Button(self.sidebar, text=f'  {icon}   {page}', anchor='w', relief='flat', bd=0,
-                          font=(FONT, 11, 'bold'), bg='#0C172A', fg=MUTED,
+                          font=(FONT, 11, 'bold'), bg=SIDEBAR, fg=MUTED,
                           activebackground=PANEL2, activeforeground=WHITE,
                           padx=20, pady=13, cursor='hand2', highlightthickness=0,
                           command=lambda p=page: self.show_page(p))
             b.pack(fill='x', padx=9, pady=2)
             self.nav_buttons[page] = b
-        tk.Frame(self.sidebar, bg='#0C172A').pack(fill='both', expand=True)
-        label(self.sidebar, 'BY TAVLOKYN STUDIOS', 9, True, CYAN, bg='#0C172A').pack(padx=14,pady=(0,6))
-        label(self.sidebar, 'FOCUS BETTER. FINISH MORE.', 8, True, MUTED, bg='#0C172A').pack(padx=14, pady=(0, 6))
-        label(self.sidebar, 'v' + VERSION + '  •  Always free', 9, color=CYAN, bg='#0C172A').pack(pady=(0, 22))
+        tk.Frame(self.sidebar, bg=SIDEBAR).pack(fill='both', expand=True)
+        label(self.sidebar, 'BY TAVLOKYN STUDIOS', 9, True, CYAN, bg=SIDEBAR).pack(padx=14,pady=(0,6))
+        label(self.sidebar, 'FOCUS BETTER. FINISH MORE.', 8, True, MUTED, bg=SIDEBAR).pack(padx=14, pady=(0, 6))
+        label(self.sidebar, 'v' + VERSION + '  •  Always free', 9, color=CYAN, bg=SIDEBAR).pack(pady=(0, 22))
         self.workspace = tk.Frame(self.root, bg=BG)
         self.workspace.pack(side='left', fill='both', expand=True)
         head = tk.Frame(self.workspace, bg=BG)
@@ -220,7 +229,7 @@ class TaskLockApp:
     def show_page(self, page, **kwargs):
         self.page = page
         for name, b in self.nav_buttons.items():
-            b.configure(bg=BLUE_DARK if name == page else '#0C172A',
+            b.configure(bg=BLUE_DARK if name == page else SIDEBAR,
                         fg=WHITE if name == page else MUTED)
         descriptions = {
             'Dashboard': 'Your command center for focus, tasks and progress.',
@@ -702,7 +711,7 @@ class TaskLockApp:
         box = card(body, padx=27, pady=24)
         box.pack(fill='x')
         label(box, 'Choose your reminder sound', 18, True).pack(anchor='w')
-        label(box, 'Twelve original alerts, custom WAV, or silence. Category sounds supported.', 11, color=MUTED).pack(anchor='w', pady=(6, 20))
+        label(box, 'Twenty original alerts with varied instrument-inspired sounds, custom WAV, or silence.', 11, color=MUTED).pack(anchor='w', pady=(6, 20))
         line = tk.Frame(box, bg=PANEL)
         line.pack(fill='x')
         chooser = combo(line, self.ringtone, TONES, 26)
@@ -743,6 +752,14 @@ class TaskLockApp:
             ('Sunrise', 'Warm, rising reminder melody'),
             ('Cyber Signal','Futuristic bright tones'),('Orbit Rise','Upward synth sequence'),
             ('Deep Focus','Soft low alert'),('Aurora Ping','Clear gentle digital bell'),
+            ('Brass Fanfare','Trumpet-inspired bright fanfare'),
+            ('Trombone Groove','Low brass groove'),
+            ('Drumline Call','Percussive marching pattern'),
+            ('Synthwave Lift','Layered synth arpeggio'),
+            ('String Serenade','Gentle string-inspired melody'),
+            ('Piano Cascade','Flowing piano-inspired notes'),
+            ('Marimba Steps','Wooden mallet-inspired rhythm'),
+            ('Electric Guitar Hook','Plucked guitar-inspired riff'),
         ]:
             label(tips, title + '   —   ' + desc, 10, color=WHITE).pack(anchor='w', pady=3)
 
@@ -759,6 +776,7 @@ class TaskLockApp:
         btn(actions, 'Check for updates', self.check_updates, primary=True).pack(side='left', padx=(0, 9))
         btn(actions, 'Release downloads', self.open_releases).pack(side='left')
         releases = [
+            ('v5.1.0','Color & Sound Edition', 'Five new themed color palettes including Inferno Red, eight new instrument-inspired ringtone melodies, and improved theme styling.'),
             ('v5.0.0','BLUECORE', 'New futuristic lock branding, advanced recurrence and subtasks, v4 backups, focus timer, calendar modes, category-based ringtones, themes, accessibility and Windows setup pipeline.'),
             ('v4.0.0', 'Blue & black redesign', 'New sidebar dashboard, colorful task lists, day-by-day calendar, editable tasks, focus dashboard, 5 additional ringtones, in-app update log and release links.'),
             ('v3.0.0', 'Homework Focus Mode', 'Online homework tasks and companion Chrome/Edge extension to block selected websites until a task is marked done or blocking is paused.'),
@@ -861,6 +879,7 @@ class TaskLockApp:
         self.sidebar.destroy();self.workspace.destroy()
         self.nav_buttons={}
         self.root.configure(bg=BG)
+        self.configure_styles()
         self.build_shell();self.show_page('Settings')
 
     def save_durations(self):
@@ -1111,12 +1130,21 @@ class TaskLockApp:
             return self.open_releases()
         def worker():
             try:
-                req = Request(f'https://api.github.com/repos/{repo}/releases/latest',
+                req = Request(f'https://api.github.com/repos/{repo}/releases?per_page=15',
                               headers={'User-Agent': f'TaskLock/{VERSION}', 'Accept': 'application/vnd.github+json'})
                 with urlopen(req, timeout=8) as response:
-                    info = json.load(response)
-                latest = info.get('tag_name', '').lstrip('v')
-                remote = tuple(int(v) for v in latest.split('.'))
+                    published = json.load(response)
+                available = []
+                for release in published:
+                    if release.get('draft'):
+                        continue
+                    match = re.fullmatch(r'v?(\d+)\.(\d+)\.(\d+)(?:-beta\.\d+)?', release.get('tag_name',''))
+                    if match:
+                        available.append((tuple(map(int, match.groups())), release))
+                if not available:
+                    raise ValueError('No compatible public release found')
+                remote, info = max(available, key=lambda entry: entry[0])
+                latest = '.'.join(map(str, remote))
                 local = tuple(int(v) for v in VERSION.split('.'))
                 if remote > local:
                     self.root.after(0, lambda: self.offer_update(latest, info))

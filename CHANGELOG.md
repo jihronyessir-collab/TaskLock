@@ -1,5 +1,14 @@
 # TaskLock — Changelog
 
+## v5.1.0 — Color & Sound Edition (Windows beta)
+- Added five expressive color palettes: Inferno Red, Phantom Violet, Emerald Pulse, Solar Flare, and Arctic Frost; retained all existing themes.
+- Made the sidebar and updates panel better reflect the selected palette.
+- Added eight original synthesized, instrument-inspired alert melodies: Brass Fanfare, Trombone Groove, Drumline Call, Synthwave Lift, String Serenade, Piano Cascade, Marimba Steps, and Electric Guitar Hook.
+- Retained existing 12 alerts, per-category choices, custom WAV, silence, and volume controls.
+- Improved update checking to recognize published GitHub beta releases.
+- Preserved task data and local settings on upgrades. Beta testing continues.
+
+
 ## v5.0.0 — BLUECORE (source release candidate, October 2026)
 - Replaced feather identity with a custom futuristic electric-blue lock emblem (PNG, ICO).
 - Refreshed the blue-black command-center dashboard, brand navigation, task summary cards and daily progress.

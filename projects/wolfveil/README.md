@@ -31,7 +31,14 @@ Never run an untrusted tunnel configuration.
 
 ## Developer commands
 
-Run from this folder:
+Run from this folder. The prototype now also has an **early alpha Windows GUI**
+that explicitly asks before connecting or disconnecting:
+
+```powershell
+python -m wolfveil gui
+```
+
+Other commands:
 
 ```powershell
 python -m wolfveil check "C:\path\mytunnel.conf"
@@ -46,7 +53,7 @@ client. You can also use WireGuard's own UI instead.
 
 ## Next milestones
 
-1. Dedicated Wolfveil repository, app branding, and a simple Windows UI.
+1. Dedicated Wolfveil repository, refine the alpha Windows UI, and add secure settings.
 2. Tunnel configuration import with secure storage and user consent.
 3. Optional, auditable DNS ad/tracker blocking **inside the VPN tunnel**, with
    explicit provider choice and DNS leak testing.

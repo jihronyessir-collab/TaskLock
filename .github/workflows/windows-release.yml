@@ -1,6 +1,12 @@
 name: TaskLock v5 Windows Installer and Release
 on:
   workflow_dispatch:
+    inputs:
+      publish_release:
+        description: 'Publish a public v5.0.0 beta installer after Windows testing'
+        type: boolean
+        required: true
+        default: false
   push:
     tags: ['v*']
 permissions:
@@ -54,9 +60,13 @@ jobs:
           name: TaskLock-v5-Windows
           path: release/*
       - name: Publish official release on version tags
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: ${{ startsWith(github.ref, 'refs/tags/v') || inputs.publish_release == true }}
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && 'v5.0.0-beta.1' || github.ref_name }}
+          target_commitish: ${{ github.sha }}
+          name: ${{ github.event_name == 'workflow_dispatch' && 'TaskLock v5.0.0 BLUECORE Beta 1' || github.ref_name }}
+          prerelease: ${{ github.event_name == 'workflow_dispatch' || contains(github.ref_name, '-') }}
           files: release/*
           body_path: CHANGELOG.md
           generate_release_notes: true

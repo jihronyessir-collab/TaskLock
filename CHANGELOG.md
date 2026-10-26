@@ -5,6 +5,7 @@
 - Verified installer filenames, versions, URLs, and sizes before offering downloads.
 - Improved messages when neither update source is available.
 - Kept all V5.1.0 Color & Sound features and local task data unchanged.
+- Added regression tests for API 404, network failures, and unsafe release download links.
 
 
 ## v5.1.0 — Color & Sound Edition (Windows public beta)

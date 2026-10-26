@@ -14,7 +14,7 @@ import zipfile
 from datetime import date, datetime, timedelta
 from urllib.parse import urlsplit
 
-VERSION = '5.1.1'
+VERSION = '6.0.0'
 FMT = '%Y-%m-%d %H:%M'
 DEFAULT_SITES = 'youtube.com, tiktok.com, instagram.com'
 REPEATS = ('Never', 'Daily', 'Weekdays', 'Weekly', 'Every 2 Weeks', 'Monthly', 'Every 3 Months', 'Yearly')

@@ -81,7 +81,8 @@ def latest_published_release(repo: str, *, opener=None, timeout: int = 8) -> tup
     Does not download or install any software. The feed is a fallback when the
     GitHub API returns HTTP 404, is blocked, or otherwise cannot be reached.
     """
-    if not isinstance(repo, str) or not _REPO.fullmatch(repo):
+    if (not isinstance(repo, str) or not _REPO.fullmatch(repo)
+            or any(part in (".", "..") for part in repo.split("/"))):
         raise ReleaseLookupError("The configured GitHub repository is invalid.")
     if opener is None:
         opener = urlopen

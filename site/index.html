@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080F20">
+  <meta name="description" content="TaskLock — free Windows homework reminders, full-screen alerts, focus mode, and custom ringtones.">
+  <title>TaskLock v5 BLUECORE — Stay Focused. Finish Strong.</title>
+  <link rel="icon" type="image/png" href="assets/tasklock.png">
+  <style>
+    :root{--bg:#080f20;--panel:#111e34;--panel2:#172846;--blue:#398cff;--cyan:#84c9ff;--fg:#f2f7ff;--muted:#a5b6d0;--line:#2a3a56}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--fg);font-family:Inter,'Segoe UI',system-ui,sans-serif;line-height:1.6}
+    .glow{position:absolute;z-index:-1;top:0;left:10%;width:80%;height:730px;background:radial-gradient(ellipse,rgba(32,95,206,.22),transparent 65%);pointer-events:none}
+    a{color:inherit;text-decoration:none}a:focus-visible,button:focus-visible{outline:3px solid var(--cyan);outline-offset:4px}
+    .container{width:min(1160px,calc(100% - 44px));margin:auto}nav{display:flex;align-items:center;justify-content:space-between;padding:22px 0;gap:12px}
+    .logo{display:flex;align-items:center;gap:12px;font-size:21px;font-weight:800}.logo img{width:48px;height:48px}
+    .navlinks{display:flex;gap:27px;align-items:center;color:var(--muted);font-size:14px}.navlinks a:hover{color:white}
+    .button{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:1px solid var(--line);background:var(--panel2);padding:14px 21px;border-radius:10px;font-weight:700;transition:transform .15s,background .15s;cursor:pointer}
+    .button:hover{transform:translateY(-2px);background:#1d385f}.button.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.button.primary:hover{background:#2279f0}
+    .hero{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:38px;min-height:610px;padding:55px 0 75px}
+    .eyebrow{color:var(--cyan);font-weight:750;font-size:12px;letter-spacing:2.7px;text-transform:uppercase}.hero h1{font-size:clamp(42px,5vw,70px);line-height:1.05;letter-spacing:-2.5px;margin:17px 0 23px}
+    .hero h1 span{color:var(--blue)}.lead{font-size:18px;max-width:505px;color:var(--muted);margin:0 0 28px}.actionrow{display:flex;flex-wrap:wrap;gap:11px}
+    .fine{font-size:13px;color:var(--muted);margin-top:15px}
+    .preview{position:relative;border:1px solid #3e69a5;background:#0a1325;padding:8px;border-radius:17px;box-shadow:0 25px 90px rgba(0,0,0,.5),0 0 60px rgba(41,113,234,.13)}
+    .preview img{display:block;width:100%;border-radius:9px}.preview .pill{position:absolute;right:-13px;top:-18px;padding:8px 13px;border-radius:10px;background:#0b5db8;color:white;font-size:12px;font-weight:750;box-shadow:0 9px 25px #050914}
+    section{padding:73px 0}h2{font-size:36px;line-height:1.2;letter-spacing:-1px;margin:10px 0 14px}.sub{color:var(--muted);max-width:720px;margin-bottom:35px}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.feature{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;min-height:210px}
+    .feature .ic{display:grid;place-items:center;width:48px;height:48px;background:#183d72;border-radius:12px;color:var(--cyan);font-size:24px;font-weight:800}
+    .feature h3{font-size:19px;margin:17px 0 7px}.feature p{font-size:14px;color:var(--muted);margin:0}
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.step{border-top:2px solid #235dac;padding-top:17px}.step strong{color:var(--cyan);font-size:13px;letter-spacing:1px}
+    .step h3{font-size:20px;margin:10px 0 5px}.step p{color:var(--muted);font-size:14px;margin:0}.download{border:1px solid #315b94;background:linear-gradient(125deg,#132c56,#101c33);padding:31px;border-radius:20px;display:flex;justify-content:space-between;gap:24px;align-items:center;flex-wrap:wrap}
+    .download h2{margin:0 0 10px}.download p{color:#c1d2ed;margin:0 0 10px}.tag{display:inline-flex;font-size:12px;background:#163d72;color:var(--cyan);padding:5px 12px;border-radius:30px;letter-spacing:.4px}
+    .log{display:grid;gap:12px}.logrow{padding:20px 24px;border:1px solid var(--line);background:var(--panel);border-radius:12px;display:grid;grid-template-columns:116px 1fr;gap:20px}.logrow strong{color:var(--cyan)}.logrow p{color:var(--muted);font-size:14px;margin:5px 0 0}
+    .small{font-size:13px;color:var(--muted)}footer{border-top:1px solid var(--line);padding:25px 0;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+    code{color:#a5d4ff}#download-status{max-width:340px;font-size:13px;color:#c4d4eb}#download-link[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
+    @media(max-width:860px){.hero{grid-template-columns:1fr;padding:40px 0 45px;min-height:unset}.hero h1{font-size:50px}.preview{max-width:660px}.cards{grid-template-columns:repeat(2,1fr)}.navlinks{gap:14px}}
+    @media(max-width:560px){.container{width:min(100% - 30px,1160px)}.navlinks a:not(.button){display:none}.logo{font-size:18px}.hero h1{font-size:41px}.cards,.steps{grid-template-columns:1fr}.logrow{grid-template-columns:1fr;gap:4px}.download{padding:22px}h2{font-size:29px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="glow" aria-hidden="true"></div>
+  <div class="container">
+    <nav aria-label="Main navigation">
+      <a href="#top" class="logo"><img src="assets/tasklock.png" alt="TaskLock blue lock emblem">TaskLock</a>
+      <div class="navlinks"><a href="#features">Features</a><a href="#updates">What's new</a><a href="#install" class="button primary">Get TaskLock</a></div>
+    </nav>
+    <main id="top">
+      <div class="hero">
+        <div>
+          <div class="eyebrow">Focus better · Finish more</div>
+          <h1>Your tasks.<br>Your time.<br><span>Your focus.</span></h1>
+          <p class="lead">A futuristic, free Windows task manager by Tavlokyn Studios. See your assignments, stay on track, and spend less time on distracting websites.</p>
+          <div class="actionrow"><a class="button primary" href="#install">Get TaskLock for Windows ↓</a><a class="button" href="#features">Explore features →</a></div>
+          <p class="fine">Free to use · Windows 11 · No account needed · Local task storage</p>
+        </div>
+        <div class="preview"><span class="pill">BLUECORE / V5.0</span><img src="assets/tasklock-preview.png" alt="TaskLock v5 dashboard displaying blue task summary cards, focus mode, and a task list"></div>
+      </div>
+      <section id="features">
+        <div class="eyebrow">Everything in one place</div>
+        <h2>Built to make getting things done easier.</h2>
+        <p class="sub">TaskLock started as a reminder. Now it has a dedicated dashboard, task management, and study-friendly focus tools.</p>
+        <div class="cards">
+          <div class="feature"><div class="ic">▦</div><h3>Colorful dashboard</h3><p>See what's due today, your upcoming work, and the progress you've made.</p></div>
+          <div class="feature"><div class="ic">✓</div><h3>Real task management</h3><p>Add, edit, categorize, prioritize, search and complete tasks. Create subtasks and repeat daily, on weekdays, weekly, monthly or yearly.</p></div>
+          <div class="feature"><div class="ic">▤</div><h3>Calendar view</h3><p>Switch between month, week, and day views to plan your schedule.</p></div>
+          <div class="feature"><div class="ic">◎</div><h3>Homework focus</h3><p>Optionally block chosen distracting sites through the companion Chrome/Edge extension. Pause anytime.</p></div>
+          <div class="feature"><div class="ic">♫</div><h3>Twelve ringtones</h3><p>Choose from original melodies or import a WAV file. Full-screen alerts include Done, Snooze, and Emergency Exit.</p></div>
+          <div class="feature"><div class="ic">↻</div><h3>What's New</h3><p>Read the release history in the app and check for new published versions.</p></div>
+        </div>
+      </section>
+      <section id="install">
+        <div class="download">
+          <div><span class="tag">WINDOWS 11 · FREE DESKTOP INSTALLER</span><h2>Download TaskLock v5</h2><p>When the Windows release is published, download the installer and follow its on-screen steps. No Python setup is required.</p><div id="download-status" role="status" aria-live="polite">Checking whether a Windows release is available…</div></div>
+          <div><a id="download-link" href="#publishing" aria-disabled="true" class="button primary">Download for Windows ↓</a><p class="small">No Python needed to run the released EXE.</p></div>
+        </div>
+        <div class="steps" style="margin-top:29px">
+          <div class="step"><strong>STEP 01</strong><h3>Download & extract</h3><p>Get the official TaskLock Windows installer when a release is available.</p></div>
+          <div class="step"><strong>STEP 02</strong><h3>Launch TaskLock</h3><p>Launch TaskLock from Start. New unsigned applications may trigger Windows protection; do not disable system security.</p></div>
+          <div class="step"><strong>STEP 03</strong><h3>Optional website blocking</h3><p>In Chrome or Edge extensions, use <strong>Load unpacked</strong> to load the included <code>Browser_Extension</code> folder.</p></div>
+        </div>
+      </section>
+      <section id="updates">
+        <div class="eyebrow">Release history</div>
+        <h2>What's new in TaskLock?</h2>
+        <div class="log">
+          <div class="logrow"><strong>v5.0.0</strong><div><b>BLUECORE</b><p>New lock icon, revamped dashboard, advanced subtasks and recurrence, day/week/month calendar, focus timer, twelve ringtones, themes, local backup/restore and Windows installer workflow.</p></div></div>
+          <div class="logrow"><strong>v4.0.0</strong><div><b>The Blue Feather Update</b><p>Blue-and-black redesign, new dashboard, improved task management, focus controls, eight ringtones, update log, and Windows release pipeline.</p></div></div>
+          <div class="logrow"><strong>v3.0.0</strong><div><b>Homework Focus Mode</b><p>Added website blocking for online homework with a Chrome/Edge companion extension.</p></div></div>
+          <div class="logrow"><strong>v2.0.0</strong><div><b>Ringtone Edition</b><p>Three original sounds, preview playback, and custom WAV selection.</p></div></div>
+          <div class="logrow"><strong>v1.0.0</strong><div><b>First release</b><p>Saved tasks, calendar, recurring reminders, full-screen alerts, Done, Snooze, and Emergency Exit.</p></div></div>
+        </div>
+      </section>
+      <section id="publishing"><h2>For release publishers</h2><p class="sub">This is a real static website you can put on GitHub Pages for free. The Download button becomes active when a corresponding TaskLock Windows release appears on GitHub. Publishing requires a GitHub repository and running the included Windows build workflow.</p></section>
+    </main>
+    <footer><span>© 2026 Tavlokyn Studios · TaskLock BLUECORE</span><span>Built for focus, with an exit when you need one.</span></footer>
+  </div>
+  <script src="assets/site.js" defer></script>
+</body>
+</html>

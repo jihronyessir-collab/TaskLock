@@ -1,0 +1,22 @@
+# TaskLock v5 — Release Checklist
+
+- [x] Custom PNG and ICO lock icon
+- [x] Refreshed dashboard, navigation, calendar, tasks, focus and sounds
+- [x] Welcome screen for first-time users
+- [x] v4 data migration with snapshot and ZIP backup/restore
+- [x] Advanced subtasks, repeat schedules and safe full-screen alerts
+- [x] Category ringtones and sound volume controls
+- [x] Updated companion extension source and local focus bridge
+- [x] Accessibility options and additional themes
+- [x] GitHub Actions Windows release workflow and Inno Setup installer definition
+- [x] Website download code to detect a *real* published Windows installer
+- [x] Unit tests and Linux graphical desktop smoke test
+- [x] Browser extension domain-logic tests with mock Chrome APIs
+- [ ] Real Windows 11 install/launch/uninstall test
+- [ ] Audio playback and resume/sleep tests on actual Windows 11
+- [ ] Chrome and Edge browser integration tests on actual Windows 11
+- [ ] Build actual Windows installer EXE on a Windows runner
+- [ ] Sign installer and verify Windows Smart App Control behavior
+- [ ] Publish source to a real GitHub repository
+- [ ] Publish GitHub tag and release assets, plus a real website URL
+- [ ] Add verified links to the Tavlokyn Studios company website / Base44

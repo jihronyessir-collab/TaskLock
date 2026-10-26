@@ -1,0 +1,8 @@
+{
+ "manifest_version":3,"name":"TaskLock v5 Focus Companion","version":"5.0.0",
+ "description":"Blocks chosen distracting sites while a TaskLock homework task is due.",
+ "permissions":["alarms","tabs","storage","webNavigation"],
+ "host_permissions":["http://127.0.0.1:18763/*"],
+ "background":{"service_worker":"background.js"},
+ "action":{"default_title":"TaskLock Homework Blocker"}
+}

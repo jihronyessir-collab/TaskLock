@@ -1,8 +1,8 @@
-# TaskLock v5.0.0 — BLUECORE
+# TaskLock v5.1.1 — BLUECORE / Color & Sound
 
 **Publisher brand:** Tavlokyn Studios  
 **Product slogan:** Stay Focused. Finish Strong.  
-**Status:** Source release candidate — Windows installer is prepared for compilation, not yet built or published.  
+**Status:** V5.1.1 Windows public beta. The updated application and installer are published through official GitHub Releases. Beta testing continues.  
 **Price:** Free. **Data:** Stored locally on your computer.
 
 ## What is inside
@@ -17,12 +17,12 @@
 | First-run welcome | Intro dialog + safety controls | Existing users may see it once after upgrade |
 | Alerts | Full-screen Done, Snooze, Start Homework, Emergency Exit/Esc | Windows must be awake and TaskLock running |
 | Focus | 25-minute configurable timer; pausable blocker with Chrome/Edge extension | Does not block every browser or verify completion |
-| Sounds | 12 generated WAV melodies, custom PCM WAV, category sounds, volume | Audio playback on Windows not yet tested on hardware |
-| Preferences | 4 palettes, text size, reduced-motion preference, timer settings | Some accent panels retain the BLUECORE color |
+| Sounds | 12 generated WAV melodies, custom PCM WAV, category sounds, volume | Actual device behavior still needs ongoing beta feedback |
+| Preferences | 9 palettes, text size, reduced-motion preference, timer settings | Some accent panels retain the BLUECORE color |
 | Storage | Auto pre-v5 copy, backup ZIP and restore | No sync or cloud account |
-| Updates | In-app changelog, GitHub release checker and download prompt | Active only after a real public release repository is configured |
-| Windows distribution | PyInstaller portable EXE builder + Inno Setup installer + GitHub Actions | Windows installer must still run on Windows |
-| TaskLock website | Static free website with a download button linked to actual published releases | Not publicly deployed yet |
+| Updates | In-app changelog, GitHub release checker and download prompt | Uses GitHub Releases and official GitHub Pages fallback; downloads require user approval |
+| Windows distribution | PyInstaller portable EXE builder + Inno Setup installer + GitHub Actions | Automated Windows build passes; continue real-world beta testing |
+| TaskLock website | Static free website with a download button linked to actual published releases | Public on GitHub Pages |
 
 ## Try the app on Windows 11 with Python already installed
 
@@ -35,9 +35,9 @@
 ### Build the Windows EXE and installer locally
 
 1. Double-click `Build_Windows.bat` (requires Python and internet to install the free PyInstaller build tool).
-2. It creates `dist\TaskLock.exe` and `release\TaskLock-v5.0.0-Windows.zip`.
+2. It creates `dist\TaskLock.exe` and `release\TaskLock-v5.1.1-Windows.zip`.
 3. For the **actual Windows installer**, also install free [Inno Setup 6](https://jrsoftware.org/isinfo.php), then rerun the build script.
-4. When successful, `release\TaskLock-v5.0.0-Setup.exe` appears. This installer creates Start Menu shortcuts and an optional desktop shortcut. It installs per-user and does **not** erase `%APPDATA%\TaskLock` on uninstall.
+4. When successful, `release\TaskLock-v5.1.1-Setup.exe` appears. This installer creates Start Menu shortcuts and an optional desktop shortcut. It installs per-user and does **not** erase `%APPDATA%\TaskLock` on uninstall.
 
 **Security note:** Unsigned software may be blocked by Windows Smart App Control. Do not turn off Smart App Control just to use TaskLock. Instead, have the release built, tested, and eventually code-signed by the publisher.
 
@@ -51,19 +51,35 @@
 
 Site blocking is voluntary and browser-specific. The extension calls the local status server at `127.0.0.1:18763`. It does not monitor other webpages, collect browsing history, or phone home. It does not check whether your school has graded or accepted homework.
 
-## Publishing a real installer + website for free
+## Official public Windows beta
 
-A public GitHub repository with these project files is required. **No GitHub repository was identified during this build, so no public URL exists yet.**
+The Windows installer is published through the official
+[TaskLock GitHub Releases](https://github.com/jihronyessir-collab/TaskLock/releases).
+The current patch release is **v5.1.1**, which fixes the Check for Updates
+HTTP 404 issue by falling back to an official release feed hosted on
+[TaskLock GitHub Pages](https://jihronyessir-collab.github.io/TaskLock/).
 
-1. Create a new GitHub repository, and upload the **contents** of `TaskLock_v5` at the repository root (the `.github` directory must be included).
-2. In repository **Settings → Pages → Source**, select **GitHub Actions**. Push `main` to deploy the `site/` folder via `.github/workflows/website.yml`.
-3. In **Actions**, run `TaskLock v5 Windows Installer and Release` manually. The `windows-2022` runner compiles the real `.exe` and installer. The workflow then uploads build artifacts for private testing.
-4. **Verify on Windows 11**: launch installer and uninstall, check sounds, test focus extension in Chrome and Edge, test the full-screen reminder and Esc, test backups and v4 migration.
-5. When tests pass, publish a GitHub tag `v5.0.0`. The workflow uploads a GitHub Release with `TaskLock-v5.0.0-Setup.exe`, the portable ZIP, and `release-manifest.json` containing real SHA-256 checksums.
-6. The GitHub Pages TaskLock site automatically finds the installer using the GitHub Releases API. For Netlify hosting, enter the real `owner/repo` value into `site/release_config.json` prior to upload.
-7. On the separate Tavlokyn Studios company website, link the **TaskLock** product card to your published TaskLock site. Add the actual release URL only after it's live. If you're using Base44, you can edit that existing product-card link there manually.
+- The **Check for Updates** button checks GitHub Releases first, then the official
+  GitHub Pages release feed if GitHub's API is unavailable.
+- TaskLock **asks permission before downloading** an update. Downloaded installers
+  are not installed automatically.
+- The app validates installer names, version numbers, download URLs, and sizes.
+  SHA-256 hashes are checked when the release metadata provides them.
+- Existing installations with the broken checker should download and run the
+  v5.1.1 installer manually once. Local AppData task data is preserved by design;
+  making a backup before upgrading is recommended.
+- Windows installers are not currently code-signed. Do not disable security
+  protections to install software; verify the publisher and release source.
 
-Do not claim the EXE is signed or Windows Smart App Control-compatible unless independently verified. To avoid misleading visitors, the site's Download button stays disabled before a real release asset exists.
+### Publishing future releases
+
+1. Update `VERSION` in `app/tasklock_core.py`, and the installer version in
+   `installer/TaskLock.iss`.
+2. Update the changelog and test the new features.
+3. GitHub Actions builds and tests the real Windows app and installer.
+4. After verification, use the release workflow's explicit publish option.
+5. The release workflow refreshes the GitHub Pages release feed automatically.
+6. Update the Tavlokyn Studios product download link to the published installer.
 
 ## Developer tests
 
@@ -73,4 +89,4 @@ node tests/browser_extension_test.js
 xvfb-run -a python tests/gui_smoke.py  # Linux desktop logic smoke test only
 ```
 
-See `TEST_REPORT.md`, `CHANGELOG.md`, and `RELEASE_CHECKLIST.md`. This is a prototype source release candidate, not a Windows 11-certified production installer.
+See `TEST_REPORT.md`, `CHANGELOG.md`, and `RELEASE_CHECKLIST.md`. This is a public beta, not a Windows 11-certified or code-signed production installer.

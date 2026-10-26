@@ -26,18 +26,21 @@
     return;
   }
   try {
-    const response = await fetch('https://api.github.com/repos/'+repo+'/releases/latest',
+    const response = await fetch('https://api.github.com/repos/'+repo+'/releases?per_page=15',
       {headers:{Accept:'application/vnd.github+json'}});
     if (!response.ok) throw Error('No release published');
-    const data = await response.json();
-    const files = data.assets || [];
-    const asset = files.find(x=>/^TaskLock-v[\d.]+-Setup\.exe$/i.test(x.name)) ||
-                  files.find(x=>/^TaskLock-v[\d.]+-Windows\.zip$/i.test(x.name));
+    const releases = await response.json();
+    if (!Array.isArray(releases)) throw Error('Invalid release data');
+    const findInstaller = files => files.find(x=>/^TaskLock-v[\d.]+-Setup\.exe$/i.test(x.name)) ||
+      files.find(x=>/^TaskLock-v[\d.]+-Windows\.zip$/i.test(x.name));
+    const data = releases.find(x=>!x.draft && findInstaller(x.assets || []));
+    if (!data) throw Error('No Windows release available');
+    const asset = findInstaller(data.assets || []);
     if (!asset || !asset.browser_download_url.startsWith('https://github.com/')) throw Error('No Windows release asset');
     link.href=asset.browser_download_url;
     link.removeAttribute('aria-disabled');
-    link.textContent = 'Download '+asset.name;
-    status.textContent = 'Published '+data.tag_name+' · '+(asset.size/1048576).toFixed(1)+' MB';
+    link.textContent = 'Download TaskLock for Windows'+(data.prerelease?' (Beta)':'');
+    status.textContent = (data.prerelease?'Public beta':'Published release')+' '+data.tag_name+' · '+(asset.size/1048576).toFixed(1)+' MB · Windows 10/11';
   } catch (err) {
     link.removeAttribute('href');
     link.textContent='Windows release coming soon';

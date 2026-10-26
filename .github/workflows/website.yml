@@ -1,6 +1,8 @@
 name: Deploy TaskLock Website
 on:
   workflow_dispatch:
+  release:
+    types: [published]
   push:
     branches: [main]
     paths: ['site/**', '.github/workflows/website.yml']
@@ -19,6 +21,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Build official release metadata fallback
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python tools/write_release_feed.py --repo "${{ github.repository }}" --output site/release-info.json
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

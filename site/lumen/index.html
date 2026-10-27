@@ -34,7 +34,7 @@ function response(q){const n=norm(q),c=chat(),history=c.messages.slice(-8),previ
  if(/\b(teach|learn something|can i teach)\b/.test(n))return "Absolutely! Use the Teach Lumen button to add a fact to my local knowledge notebook. I'll mark it unverified until checked.";
  const words=n.split(" ").filter(w=>w.length>3&&!["what","where","when","which","about","tell","please","would","could","should","know","explain","that","this","there"].includes(w));
  const scored=[...state.facts,...built].map(x=>({...x,score:words.reduce((v,w)=>v+(norm(x.topic).includes(w)?5:0)+(norm(x.fact).includes(w)?1:0),0)})).sort((a,b)=>b.score-a.score);
- if(scored[0]?.score>0)return "Here's something I know about "+scored[0].topic+": "+scored[0].fact+(state.facts.includes(scored[0])?" (This was taught by a user and isn't verified.)":"")+"\n\nWould you like to explore that more?";
+ if(scored[0]?.score>0)return "Here's something I know about "+scored[0].topic+": "+scored[0].fact+(scored[0].userTaught?" (This was taught by a user and isn't verified.)":"")+"\n\nWould you like to explore that more?";
  if(/\b(why|how|what|where|when|who|can you|could you)\b/.test(n))return "That's a good question. I don't know enough to give you a reliable answer yet, and I don't want to invent one. You can teach me a note about it, or ask about an Earth topic I've learned.";
  return "I hear you. I'm still learning to understand open-ended conversation, so I might miss some context. Can you tell me a bit more about what you mean?";
 }

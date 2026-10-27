@@ -1,0 +1,53 @@
+name: TaskLock V7 Alpha Windows Build
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/tasklock-v7-alpha.yml'
+permissions:
+  contents: write
+jobs:
+  build-alpha:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download Phase Four V7 source snapshot
+        shell: pwsh
+        run: |
+          $url = 'https://media.base44.com/files/public/6aded06e3023dd51b6c7103c/ab3f41f17_TaskLock-V7-Alpha1-Source.zip'
+          Invoke-WebRequest -Uri $url -OutFile 'TaskLock-V7-Alpha1-Source.zip'
+          Expand-Archive -Path 'TaskLock-V7-Alpha1-Source.zip' -DestinationPath 'v7-source'
+          if (!(Test-Path 'v7-source/TaskLock-V7-Alpha/app/TaskLockV7.py')) { throw 'V7 source missing' }
+      - name: Test V7 core
+        shell: pwsh
+        run: python -m unittest discover -s v7-source/TaskLock-V7-Alpha/tests -v
+      - name: Build Windows EXE
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pip pyinstaller
+          cd v7-source/TaskLock-V7-Alpha
+          pyinstaller --noconfirm --clean --onefile --windowed --name TaskLock-V7-Alpha1 app/TaskLockV7.py
+          if (!(Test-Path 'dist/TaskLock-V7-Alpha1.exe')) { throw 'EXE build missing' }
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TaskLock-V7-Alpha1-Windows
+          path: v7-source/TaskLock-V7-Alpha/dist/TaskLock-V7-Alpha1.exe
+      - name: Publish prerelease only
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $exe = 'v7-source/TaskLock-V7-Alpha/dist/TaskLock-V7-Alpha1.exe'
+          gh release view 'v7.0.0-alpha.1' 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload 'v7.0.0-alpha.1' $exe --clobber
+          } else {
+            gh release create 'v7.0.0-alpha.1' $exe --prerelease --title 'TaskLock V7.0.0 Alpha 1 — OVERDRIVE' --notes 'Early testing build. New Python/Tkinter command center, mission board, focus timer, analytics and local SQLite. Not feature complete. Keep V6 if you need its existing functions.'
+          }
